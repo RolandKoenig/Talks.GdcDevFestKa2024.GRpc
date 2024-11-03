@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+	<!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
+	<TrimMode>copyused</TrimMode>
+	<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove=".gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+	<!--This helps with theme dll-s trimming.
+	If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
+	https://github.com/AvaloniaUI/Avalonia/issues/5593 -->
+	<TrimmableAssembly Include="Avalonia.Themes.Fluent" />
+    <TrimmableAssembly Include="Avalonia.Themes.Default" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.1.3" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.1.3" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.3" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.3" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
+    <PackageReference Include="RolandK.AvaloniaExtensions" Version="2.1.2" />
+    <PackageReference Include="RolandK.AvaloniaExtensions.DependencyInjection" Version="2.1.2" />
+    <PackageReference Include="RolandK.AvaloniaExtensions.FluentThemeDetection" Version="1.0.1" />
+   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HappyCoding.GrpcCommunicationFeatures.ProtoDefinition\HappyCoding.GrpcCommunicationFeatures.ProtoDefinition.csproj" />
+    <ProjectReference Include="..\HappyCoding.GrpcCommunicationFeatures.Shared\HappyCoding.GrpcCommunicationFeatures.Shared.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Views\GrpcGreeterClientView.axaml.cs">
+      <DependentUpon>GrpcGreeterClientView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\GrpcBidirectionalStreamingView.axaml.cs">
+      <DependentUpon>GrpcBidirectionalStreamingView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>
